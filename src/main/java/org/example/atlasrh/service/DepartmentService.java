@@ -55,4 +55,25 @@ public class DepartmentService {
         departmentRepository.delete(department);
     }
 
+
+
+
+    @Transactional
+    public DepartmentResponse update(Long id, DepartmentUpdateRequest request) {
+
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
+
+        if (departmentRepository.existsByNameIgnoreCase(request.name())) {
+            throw new DuplicateResourceException("A department with this name already exists");
+        }
+
+        department.setName(request.name());
+        department.setDescription(request.description());
+
+        Department updatedDepartment = departmentRepository.save(department);
+
+        return departmentMapper.toResponse(updatedDepartment);
+    }
+
 }

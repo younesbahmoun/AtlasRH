@@ -39,4 +39,10 @@ public class DepartmentController {
         departmentService.delete(id);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<DepartmentResponse> update(@PathVariable Long id, @Valid @RequestBody DepartmentUpdateRequest request) {
+        DepartmentResponse response = departmentService.update(id, request);
+        return ResponseEntity.ok(response);
+    }
+
 }

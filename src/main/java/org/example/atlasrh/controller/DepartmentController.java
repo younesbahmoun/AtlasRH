@@ -33,4 +33,10 @@ public class DepartmentController {
         return departmentService.findAll();
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") Long id) {
+        departmentService.delete(id);
+    }
+
 }

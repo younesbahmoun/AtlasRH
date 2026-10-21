@@ -46,4 +46,13 @@ public class DepartmentService {
                 .toList();
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Department not found with id: " + id)
+                );
+        departmentRepository.delete(department);
+    }
+
 }

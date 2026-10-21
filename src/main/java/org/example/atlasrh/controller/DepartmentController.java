@@ -27,4 +27,10 @@ public class DepartmentController {
         return departmentService.create(request);
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<DepartmentResponse> findAll() {
+        return departmentService.findAll();
+    }
+
 }

@@ -39,4 +39,11 @@ public class DepartmentService {
         return departmentMapper.toResponse(savedDepartment);
     }
 
+    @Transactional(readOnly = true)
+    public List<DepartmentResponse> findAll() {
+        return departmentRepository.findAll().stream()
+                .map(departmentMapper::toResponse)
+                .toList();
+    }
+
 }

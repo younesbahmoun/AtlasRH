@@ -3,25 +3,15 @@ package org.example.atlasrh.mapper;
 import org.example.atlasrh.dto.department.DepartmentCreateRequest;
 import org.example.atlasrh.dto.department.DepartmentResponse;
 import org.example.atlasrh.entity.Department;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class DepartmentMapper {
+@Mapper(componentModel = "spring")
+public interface DepartmentMapper {
 
-    public Department toEntity(DepartmentCreateRequest request) {
-        Department department = new Department();
-        department.setName(request.name());
-        department.setDescription(request.description());
+    @Mapping(target = "id", ignore = true)
+    Department toEntity(DepartmentCreateRequest request);
 
-        return department;
-    }
-
-    public DepartmentResponse toResponse(Department department) {
-        return new DepartmentResponse(
-                department.getId(),
-                department.getName(),
-                department.getDescription()
-        );
-    }
+//    @Mapping(target = "id", source = "id")
+    DepartmentResponse toResponse(Department department);
 }
-

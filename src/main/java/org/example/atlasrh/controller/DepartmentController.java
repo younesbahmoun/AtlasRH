@@ -4,9 +4,8 @@ import jakarta.validation.Valid;
 import org.example.atlasrh.dto.department.DepartmentCreateRequest;
 import org.example.atlasrh.dto.department.DepartmentResponse;
 import org.example.atlasrh.dto.department.DepartmentUpdateRequest;
-import org.example.atlasrh.service.DepartmentService;
+import org.example.atlasrh.service.interfaces.DepartmentService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,9 +39,9 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DepartmentResponse> update(@PathVariable Long id, @Valid @RequestBody DepartmentUpdateRequest request) {
-        DepartmentResponse response = departmentService.update(id, request);
-        return ResponseEntity.ok(response);
+    @ResponseStatus(HttpStatus.OK)
+    public DepartmentResponse update(@PathVariable Long id, @Valid @RequestBody DepartmentUpdateRequest request) {
+        return departmentService.update(id, request);
     }
 
 }

@@ -1,0 +1,59 @@
+package org.example.atlasrh.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+import org.example.atlasrh.enums.ContractType;
+
+@Entity
+@Table(name = "employees")
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Size(max = 50)
+    @Column(name = "employee_number", nullable = false, unique = true, length = 50)
+    private String employeeNumber;
+
+    @Size(max = 100)
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
+
+    @Size(max = 100)
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
+
+    @Size(max = 100)
+    @Column(name = "job_title", nullable = false, length = 100)
+    private String jobTitle;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "contract_type", nullable = false, length = 10)
+    private ContractType contractType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getEmployeeNumber() { return employeeNumber; }
+    public void setEmployeeNumber(String employeeNumber) { this.employeeNumber = employeeNumber; }
+
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getJobTitle() { return jobTitle; }
+    public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
+
+    public ContractType getContractType() { return contractType; }
+    public void setContractType(ContractType contractType) { this.contractType = contractType; }
+
+    public Department getDepartment() { return department; }
+    public void setDepartment(Department department) { this.department = department; }
+}

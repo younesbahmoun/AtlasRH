@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import org.example.atlasrh.enums.ContractType;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,21 +16,23 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 50)
     @Column(name = "employee_number", nullable = false, unique = true, length = 50)
     private String employeeNumber;
 
-    @Size(max = 100)
     @Column(name = "first_name", nullable = false, length = 100)
     private String firstName;
 
-    @Size(max = 100)
     @Column(name = "last_name", nullable = false, length = 100)
     private String lastName;
 
-    @Size(max = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 150)
+    private String email;
+
     @Column(name = "job_title", nullable = false, length = 100)
     private String jobTitle;
+
+    @Column(name = "hire_date", nullable = false)
+    private LocalDate hireDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "contract_type", nullable = false, length = 10)
@@ -71,8 +74,14 @@ public class Employee {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
     public String getJobTitle() { return jobTitle; }
     public void setJobTitle(String jobTitle) { this.jobTitle = jobTitle; }
+
+    public LocalDate getHireDate() { return hireDate; }
+    public void setHireDate(LocalDate hireDate) { this.hireDate = hireDate; }
 
     public ContractType getContractType() { return contractType; }
     public void setContractType(ContractType contractType) { this.contractType = contractType; }

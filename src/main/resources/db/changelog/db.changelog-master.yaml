@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/001-create-department.yaml
   - include:
       file: db/changelog/changes/002-create-employees.yaml
+  - include:
+      file: db/changelog/changes/003-add-email-hire-date.yaml

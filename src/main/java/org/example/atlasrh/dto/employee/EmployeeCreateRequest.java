@@ -1,9 +1,9 @@
 package org.example.atlasrh.dto.employee;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import org.example.atlasrh.enums.ContractType;
+
+import java.time.LocalDate;
 
 public class EmployeeCreateRequest {
 
@@ -19,9 +19,18 @@ public class EmployeeCreateRequest {
     @Size(max = 100, message = "Last name cannot exceed 100 characters")
     private String lastName;
 
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
+    @Size(max = 150, message = "Email cannot exceed 150 characters")
+    private String email;
+
     @NotBlank(message = "Job title is required")
     @Size(max = 100, message = "Job title cannot exceed 100 characters")
     private String jobTitle;
+
+    @NotNull(message = "Hire date is required")
+    @PastOrPresent(message = "Hire date cannot be in the future")
+    private LocalDate hireDate;
 
     @NotNull(message = "Contract type is required")
     private ContractType contractType;
@@ -55,12 +64,28 @@ public class EmployeeCreateRequest {
         this.lastName = lastName;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getJobTitle() {
         return jobTitle;
     }
 
     public void setJobTitle(String jobTitle) {
         this.jobTitle = jobTitle;
+    }
+
+    public LocalDate getHireDate() {
+        return hireDate;
+    }
+
+    public void setHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
     }
 
     public ContractType getContractType() {

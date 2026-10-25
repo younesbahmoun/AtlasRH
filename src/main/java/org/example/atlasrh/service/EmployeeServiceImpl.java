@@ -35,9 +35,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new DuplicateResourceException("employee with id: " + request.getEmployeeNumber() + " already exist");
         }
 
+        if(employeeRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException("email: " + request.getEmail() + " already exist");
+        }
+
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
-
         Employee manager = null;
         if (request.getManagerId() != null) {
             manager = employeeRepository.findById(request.getManagerId())

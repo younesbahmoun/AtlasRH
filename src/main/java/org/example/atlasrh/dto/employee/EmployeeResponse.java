@@ -1,5 +1,6 @@
 package org.example.atlasrh.dto.employee;
 
+import org.example.atlasrh.entity.Employee;
 import org.example.atlasrh.enums.ContractType;
 
 public record EmployeeResponse (
@@ -7,6 +8,8 @@ public record EmployeeResponse (
         String employeeNumber,
         String firstName,
         String lastName,
+        String email,
         String jobTitle,
+        String hireDate,
         ContractType contractType
 ) {}

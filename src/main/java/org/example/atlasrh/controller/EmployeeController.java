@@ -7,6 +7,8 @@ import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/departments/{id}/employees")
 public class EmployeeController {
@@ -21,6 +23,18 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponse addEmployee(@PathVariable("id") Long departmentId, @Valid @RequestBody EmployeeCreateRequest request) {
         return employeeService.add(departmentId, request);
+    }
+
+    @GetMapping("/{employeeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponse getEmployeeByDepartmentId(@PathVariable("id") Long departmentId, @PathVariable("employeeId") Long employeeId) {
+        return employeeService.getEmployeeByDepartmentId(departmentId, employeeId);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<EmployeeResponse> getEmployeesByDepartment(@PathVariable("id") Long departmentId) {
+        return employeeService.getEmployeesByDepartment(departmentId);
     }
 
 }

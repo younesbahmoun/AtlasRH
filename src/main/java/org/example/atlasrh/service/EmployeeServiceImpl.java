@@ -14,8 +14,15 @@ import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
@@ -30,6 +37,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public EmployeeResponse add(@Param("id") Long departmentId, EmployeeCreateRequest request) {
+
+        log.info("Incoming Manager ID from request: {}", request.getManagerId());
 
         if(employeeRepository.existsByEmployeeNumber(request.getEmployeeNumber())) {
             throw new DuplicateResourceException("employee with id: " + request.getEmployeeNumber() + " already exist");
@@ -54,4 +63,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toResponse(savedEmployee);
     }
 
+    @Override
+    public EmployeeResponse getEmployeeByDepartmentId(Long departmentId, Long employeeId) {
+
+        departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + departmentId));
+
+        Employee employee = employeeRepository.findByIdAndDepartmentId(employeeId, departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + employeeId + " not found in department with id " + departmentId));
+
+        return employeeMapper.toResponse(employee);
+    }
+
+    @Override
+    public List<EmployeeResponse> getEmployeesByDepartment(Long departmentId) {
+
+        departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + departmentId));
+
+        return employeeRepository.findByDepartmentId(departmentId)
+                .stream()
+                .map(employeeMapper::toResponse)
+                .toList();
+    }
 }

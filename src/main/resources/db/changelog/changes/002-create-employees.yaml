@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: younes
+      changes:
+        - createTable:
+            tableName: employees
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: employee_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
+                  name: first_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: last_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: job_title
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: contract_type
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: department_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: manager_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+
+        - sql:
+            dbms: postgresql
+            sql: "ALTER TABLE employees ADD CONSTRAINT chk_employees_contract_type CHECK (contract_type IN ('CDI', 'CDD', 'STAGE'))"
+
+#        Foreign Key: Employee -> Department
+        - addForeignKeyConstraint:
+            baseTableName: employees
+            baseColumnNames: department_id
+            constraintName: fk_employees_department
+            referencedTableName: departments
+            referencedColumnNames: id
+            onDelete: RESTRICT
+
+#        Foreign Key: Employee -> Manager (Self-Reference)
+        - addForeignKeyConstraint:
+            baseTableName: employees
+            baseColumnNames: manager_id
+            constraintName: fk_employee_manager
+            referencedTableName: employees
+            referencedColumnNames: id
+            onDelete: SET NULL
+
+        # Check Constraint: Employee cannot be their own manager (Règle 2)
+        - sql:
+            sql: ALTER TABLE employees ADD CONSTRAINT chk_employee_not_self_manager CHECK (id != manager_id)

@@ -7,23 +7,23 @@ import java.time.LocalDate;
 
 public class EmployeePatchRequest {
 
-    @Size(max = 50, message = "Employee number cannot exceed 50 characters")
+    @Size(max = 50, message = "{employee.number.size}")
     private String employeeNumber;
 
-    @Size(max = 100, message = "First name cannot exceed 100 characters")
+    @Size(max = 100, message = "{employee.firstName.size}")
     private String firstName;
 
-    @Size(max = 100, message = "Last name cannot exceed 100 characters")
+    @Size(max = 100, message = "{employee.lastName.size}")
     private String lastName;
 
-    @Email(message = "Invalid email format")
-    @Size(max = 150, message = "Email cannot exceed 150 characters")
+    @Email(message = "{employee.email.invalid}")
+    @Size(max = 150, message = "{employee.email.size}")
     private String email;
 
-    @Size(max = 100, message = "Job title cannot exceed 100 characters")
+    @Size(max = 100, message = "{employee.jobTitle.size}")
     private String jobTitle;
 
-    @PastOrPresent(message = "Hire date cannot be in the future")
+    @PastOrPresent(message = "{employee.hireDate.invalid}")
     private LocalDate hireDate;
 
     private ContractType contractType;

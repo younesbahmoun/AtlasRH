@@ -16,7 +16,6 @@ import org.example.atlasrh.repository.DepartmentRepository;
 import org.example.atlasrh.repository.EmployeeRepository;
 import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -168,6 +167,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + request.getManagerId()));
 
             employee.setManager(manager);
+        } else {
+            employee.setManager(null);
         }
 
         employeeMapper.patchEntity(request, employee);

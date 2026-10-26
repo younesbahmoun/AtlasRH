@@ -1,11 +1,7 @@
 package org.example.atlasrh.dto.employee;
 
+import jakarta.validation.constraints.*;
 import org.example.atlasrh.enums.ContractType;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
@@ -39,8 +35,10 @@ public record EmployeeUpdateRequest(
         @NotNull(message = "{employee.contractType.required}")
         ContractType contractType,
 
-        @NotNull(message = "{employee.departmentId.required}")
+        @NotNull(message = "{department.departmentId.required}")
+        @Positive(message = "{department.departmentId.positive}")
         Long departmentId,
 
+        @Positive(message = "{employee.managerId.positive}")
         Long managerId
 ) {}

@@ -15,13 +15,13 @@ public class EmployeeMapper {
     public Employee toEntity(EmployeeCreateRequest request, Department department, Employee manager) {
 
             Employee employee = new Employee();
-            employee.setEmployeeNumber(request.getEmployeeNumber());
-            employee.setFirstName(request.getFirstName());
-            employee.setLastName(request.getLastName());
-            employee.setEmail(request.getEmail());
-            employee.setJobTitle(request.getJobTitle());
-            employee.setHireDate(request.getHireDate());
-            employee.setContractType(request.getContractType());
+            employee.setEmployeeNumber(request.employeeNumber());
+            employee.setFirstName(request.firstName());
+            employee.setLastName(request.lastName());
+            employee.setEmail(request.email());
+            employee.setJobTitle(request.jobTitle());
+            employee.setHireDate(request.hireDate());
+            employee.setContractType(request.contractType());
             employee.setDepartment(department);
             employee.setManager(manager);
 

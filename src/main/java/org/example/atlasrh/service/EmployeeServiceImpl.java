@@ -16,6 +16,7 @@ import org.example.atlasrh.repository.DepartmentRepository;
 import org.example.atlasrh.repository.EmployeeRepository;
 import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -42,21 +43,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public EmployeeResponse add(@Param("id") Long departmentId, EmployeeCreateRequest request) {
 
-        log.info("Incoming Manager ID from request: {}", request.getManagerId());
+        log.info("Incoming Manager ID from request: {}", request.managerId());
 
-        if(employeeRepository.existsByEmployeeNumber(request.getEmployeeNumber())) {
-            throw new DuplicateResourceException("employee with id: " + request.getEmployeeNumber() + " already exist");
+        if(employeeRepository.existsByEmployeeNumber(request.employeeNumber())) {
+            throw new DuplicateResourceException("employee with id: " + request.employeeNumber() + " already exist");
         }
 
-        if(employeeRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("email: " + request.getEmail() + " already exist");
+        if(employeeRepository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("email: " + request.email() + " already exist");
         }
 
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
         Employee manager = null;
-        if (request.getManagerId() != null) {
-            manager = employeeRepository.findById(request.getManagerId())
+        if (request.managerId() != null) {
+            manager = employeeRepository.findById(request.managerId())
                     .orElseThrow(() -> new ResourceNotFoundException("Manager not found"));
         }
 

@@ -2,7 +2,9 @@ package org.example.atlasrh.controller;
 
 import jakarta.validation.Valid;
 import org.example.atlasrh.dto.employee.EmployeeCreateRequest;
+import org.example.atlasrh.dto.employee.EmployeePatchRequest;
 import org.example.atlasrh.dto.employee.EmployeeResponse;
+import org.example.atlasrh.dto.employee.EmployeeUpdateRequest;
 import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +38,19 @@ public class EmployeeController {
     public List<EmployeeResponse> getEmployeesByDepartment(@PathVariable("id") Long departmentId) {
         return employeeService.getEmployeesByDepartment(departmentId);
     }
+
+    @PutMapping("/{employeeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponse updateEmployee(@PathVariable("id") Long departmentId, @PathVariable("employeeId") Long employeeId, @Valid @RequestBody EmployeeUpdateRequest request) {
+        return employeeService.updateEmployee(employeeId, request);
+    }
+
+
+    @PatchMapping("/{employeeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponse patchEmployee(@PathVariable Long employeeId, @Valid @RequestBody EmployeePatchRequest request) {
+        return employeeService.patchEmployee(employeeId, request);
+    }
+
 
 }

@@ -11,4 +11,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     boolean existsByEmail(String email);
     Optional<Employee> findByIdAndDepartmentId(Long employeeId, Long departmentId);
     List<Employee> findByDepartmentId(Long departmentId);
+    boolean existsByEmailAndIdNot(String email, Long employeeId);
+    boolean existsByEmployeeNumberAndIdNot(String employeeNumber, Long employeeId);
 }

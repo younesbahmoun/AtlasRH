@@ -2,10 +2,14 @@ package org.example.atlasrh.service;
 
 import jakarta.transaction.Transactional;
 import org.example.atlasrh.dto.employee.EmployeeCreateRequest;
+import org.example.atlasrh.dto.employee.EmployeePatchRequest;
 import org.example.atlasrh.dto.employee.EmployeeResponse;
+import org.example.atlasrh.dto.employee.EmployeeUpdateRequest;
 import org.example.atlasrh.entity.Department;
 import org.example.atlasrh.entity.Employee;
 import org.example.atlasrh.exception.DuplicateResourceException;
+import org.example.atlasrh.exception.InvalidEmployeeDataException;
+import org.example.atlasrh.exception.InvalidEmployeeManagerException;
 import org.example.atlasrh.exception.ResourceNotFoundException;
 import org.example.atlasrh.mapper.EmployeeMapper;
 import org.example.atlasrh.repository.DepartmentRepository;
@@ -85,5 +89,112 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .stream()
                 .map(employeeMapper::toResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public EmployeeResponse updateEmployee(Long employeeId, EmployeeUpdateRequest request) {
+
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
+
+        if (employeeRepository.existsByEmailAndIdNot(request.email(), employeeId)) {
+            throw new DuplicateResourceException("Email already exists: " + request.email());
+        }
+
+        if (employeeRepository.existsByEmployeeNumberAndIdNot(request.employeeNumber(), employeeId)) {
+            throw new DuplicateResourceException("Employee number already exists: " + request.employeeNumber());
+        }
+
+        Department department = departmentRepository.findById(request.departmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + request.departmentId()));
+
+        Employee manager = null;
+
+        if (request.managerId() != null) {
+            if (request.managerId().equals(employeeId)) {
+                throw new InvalidEmployeeManagerException("An employee cannot be their own manager");
+            }
+
+            manager = employeeRepository.findById(request.managerId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + request.managerId()));
+        }
+
+        employeeMapper.updateEntity(request, employee);
+
+        employee.setDepartment(department);
+        employee.setManager(manager);
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return employeeMapper.toResponse(updatedEmployee);
+    }
+
+
+
+
+
+    @Override
+    @Transactional
+    public EmployeeResponse patchEmployee(Long employeeId, EmployeePatchRequest request) {
+
+        validateTextFields(request);
+
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
+
+        if (request.getEmail() != null && !request.getEmail().equals(employee.getEmail()) && employeeRepository.existsByEmailAndIdNot(request.getEmail(), employeeId)) {
+            throw new DuplicateResourceException("Email already exists: " + request.getEmail());
+        }
+
+        if (request.getEmployeeNumber() != null && !request.getEmployeeNumber().equals(employee.getEmployeeNumber()) && employeeRepository.existsByEmployeeNumberAndIdNot(request.getEmployeeNumber(), employeeId)) {
+            throw new DuplicateResourceException("Employee number already exists: " + request.getEmployeeNumber());
+        }
+
+        if (request.getDepartmentId() != null) {
+            Department department = departmentRepository.findById(request.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + request.getDepartmentId()));
+
+            employee.setDepartment(department);
+        }
+
+        if (request.getManagerId() != null) {
+            if (request.getManagerId().equals(employeeId)) {
+                throw new InvalidEmployeeManagerException("An employee cannot be their own manager");
+            }
+
+            Employee manager = employeeRepository.findById(request.getManagerId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + request.getManagerId()));
+
+            employee.setManager(manager);
+        }
+
+        employeeMapper.patchEntity(request, employee);
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return employeeMapper.toResponse(updatedEmployee);
+    }
+
+    private void validateTextFields(EmployeePatchRequest request) {
+        if (request.getEmployeeNumber() != null && request.getEmployeeNumber().isBlank()) {
+            throw new InvalidEmployeeDataException("Employee number cannot be blank");
+        }
+
+        if (request.getFirstName() != null && request.getFirstName().isBlank()) {
+            throw new InvalidEmployeeDataException("First name cannot be blank");
+        }
+
+        if (request.getLastName() != null && request.getLastName().isBlank()) {
+            throw new InvalidEmployeeDataException("Last name cannot be blank");
+        }
+
+        if (request.getEmail() != null && request.getEmail().isBlank()) {
+            throw new InvalidEmployeeDataException("Email cannot be blank");
+        }
+
+        if (request.getJobTitle() != null && request.getJobTitle().isBlank()) {
+            throw new InvalidEmployeeDataException("Job title cannot be blank");
+        }
     }
 }

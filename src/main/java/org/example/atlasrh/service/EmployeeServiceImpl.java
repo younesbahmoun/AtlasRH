@@ -1,6 +1,7 @@
 package org.example.atlasrh.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.example.atlasrh.dto.employee.EmployeeCreateRequest;
 import org.example.atlasrh.dto.employee.EmployeePatchRequest;
 import org.example.atlasrh.dto.employee.EmployeeResponse;
@@ -15,6 +16,7 @@ import org.example.atlasrh.mapper.EmployeeMapper;
 import org.example.atlasrh.repository.DepartmentRepository;
 import org.example.atlasrh.repository.EmployeeRepository;
 import org.example.atlasrh.service.interfaces.EmployeeService;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -31,12 +34,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final EmployeeMapper employeeMapper;
-
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository, EmployeeMapper employeeMapper, DepartmentRepository departmentRepository) {
-        this.employeeRepository = employeeRepository;
-        this.employeeMapper = employeeMapper;
-        this.departmentRepository = departmentRepository;
-    }
 
     @Override
     @Transactional
@@ -158,18 +155,25 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setDepartment(department);
         }
 
-        if (request.getManagerId() != null) {
-            if (request.getManagerId().equals(employeeId)) {
-                throw new InvalidEmployeeManagerException("An employee cannot be their own manager");
+        JsonNullable<Long> managerIdField = request.getManagerId();
+
+        if (managerIdField != null && managerIdField.isPresent()) {
+            Long managerId = managerIdField.orElse(null);
+
+            if (managerId == null) {
+                employee.setManager(null);
+            } else {
+                if (managerId.equals(employeeId)) {
+                    throw new InvalidEmployeeManagerException("An employee cannot be their own manager");
+                }
+
+                Employee manager = employeeRepository.findById(managerId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + managerId));
+
+                employee.setManager(manager);
             }
-
-            Employee manager = employeeRepository.findById(request.getManagerId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Manager not found with id: " + request.getManagerId()));
-
-            employee.setManager(manager);
-        } else {
-            employee.setManager(null);
         }
+
 
         employeeMapper.patchEntity(request, employee);
 

@@ -1,10 +1,14 @@
 package org.example.atlasrh.dto.employee;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.atlasrh.enums.ContractType;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.time.LocalDate;
 
@@ -38,5 +42,5 @@ public class EmployeePatchRequest {
     private Long departmentId;
 
     @Positive(message = "{employee.managerId.positive}")
-    private Long managerId;
+    private JsonNullable<Long> managerId = JsonNullable.undefined();
 }

@@ -8,78 +8,35 @@ import org.example.atlasrh.entity.Department;
 import org.example.atlasrh.entity.Employee;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.BeanMapping;
 
-@Component
-public class EmployeeMapper {
-    public Employee toEntity(EmployeeCreateRequest request, Department department, Employee manager) {
+@Mapper(componentModel = "spring")
+public interface EmployeeMapper {
 
-            Employee employee = new Employee();
-            employee.setEmployeeNumber(request.employeeNumber());
-            employee.setFirstName(request.firstName());
-            employee.setLastName(request.lastName());
-            employee.setEmail(request.email());
-            employee.setJobTitle(request.jobTitle());
-            employee.setHireDate(request.hireDate());
-            employee.setContractType(request.contractType());
-            employee.setDepartment(department);
-            employee.setManager(manager);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "employeeNumber", source = "request.employeeNumber")
+    @Mapping(target = "firstName", source = "request.firstName")
+    @Mapping(target = "lastName", source = "request.lastName")
+    @Mapping(target = "email", source = "request.email")
+    @Mapping(target = "jobTitle", source = "request.jobTitle")
+    @Mapping(target = "hireDate", source = "request.hireDate")
+    @Mapping(target = "contractType", source = "request.contractType")
+    @Mapping(target = "department", source = "department")
+    @Mapping(target = "manager", source = "manager")
+    Employee toEntity(EmployeeCreateRequest request, Department department, Employee manager);
 
-            return employee;
-    }
+    EmployeeResponse toResponse(Employee employee);
 
-    public EmployeeResponse toResponse(Employee employee) {
-        return new EmployeeResponse(
-                employee.getId(),
-                employee.getEmployeeNumber(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getEmail(),
-                employee.getJobTitle(),
-                employee.getHireDate().toString(),
-                employee.getContractType()
-//                employee.getManager().getId(),
-//                employee.getManager().getFirstName() + " " + employee.getManager().getLastName()
-        );
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "manager", ignore = true)
+    void updateEntity(EmployeeUpdateRequest request, @MappingTarget Employee employee);
 
-    public void updateEntity(EmployeeUpdateRequest request, Employee employee) {
-        employee.setEmployeeNumber(request.employeeNumber());
-        employee.setFirstName(request.firstName());
-        employee.setLastName(request.lastName());
-        employee.setEmail(request.email());
-        employee.setJobTitle(request.jobTitle());
-        employee.setHireDate(request.hireDate());
-        employee.setContractType(request.contractType());
-    }
-
-    public void patchEntity(EmployeePatchRequest request, Employee employee) {
-        if (request.getEmployeeNumber() != null) {
-            employee.setEmployeeNumber(request.getEmployeeNumber());
-        }
-
-        if (request.getFirstName() != null) {
-            employee.setFirstName(request.getFirstName());
-        }
-
-        if (request.getLastName() != null) {
-            employee.setLastName(request.getLastName());
-        }
-
-        if (request.getEmail() != null) {
-            employee.setEmail(request.getEmail());
-        }
-
-        if (request.getJobTitle() != null) {
-            employee.setJobTitle(request.getJobTitle());
-        }
-
-        if (request.getHireDate() != null) {
-            employee.setHireDate(request.getHireDate());
-        }
-
-        if (request.getContractType() != null) {
-            employee.setContractType(request.getContractType());
-        }
-    }
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "department", ignore = true)
+    @Mapping(target = "manager", ignore = true)
+    void patchEntity(EmployeePatchRequest request, @MappingTarget Employee employee);
 }

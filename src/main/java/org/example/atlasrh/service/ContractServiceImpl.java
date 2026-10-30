@@ -14,6 +14,8 @@ import org.example.atlasrh.service.interfaces.ContractService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @RequiredArgsConstructor
 @Service
 public class ContractServiceImpl implements ContractService {
@@ -40,5 +42,30 @@ public class ContractServiceImpl implements ContractService {
         Contract savedContract = contractRepository.save(contract);
 
         return contractMapper.toResponse(savedContract);
+    }
+
+    @Override
+    @Transactional
+    public ContractResponse terminateContract(Long employeeId, Long contractId) {
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new ResourceNotFoundException("Employee not found with id: " + employeeId);
+        }
+
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contract not found with id: " + contractId));
+
+        if (!contract.getEmployee().getId().equals(employeeId)) {
+            throw new InvalidEmployeeDataException("Contract with id " + contractId + " does not belong to employee " + employeeId);
+        }
+
+        if (Boolean.FALSE.equals(contract.getIsActive())) {
+            throw new InvalidEmployeeDataException("Contract is already terminated");
+        }
+
+        contract.setIsActive(false);
+        contract.setEndDate(LocalDate.now());
+
+        Contract updatedContract = contractRepository.save(contract);
+        return contractMapper.toResponse(updatedContract);
     }
 }

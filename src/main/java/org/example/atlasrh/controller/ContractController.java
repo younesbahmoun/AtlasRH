@@ -8,6 +8,8 @@ import org.example.atlasrh.service.interfaces.ContractService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/employees/{employeeId}/contracts")
@@ -27,5 +29,12 @@ public class ContractController {
     @ResponseStatus(HttpStatus.OK)
     public ContractResponse terminateContract(@PathVariable Long employeeId, @PathVariable Long contractId) {
         return contractService.terminateContract(employeeId, contractId);
+    }
+
+    // US3-3: Consulter l'historique des contrats d'un employé
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ContractResponse> getEmployeeContractHistory(@PathVariable Long employeeId) {
+        return contractService.getEmployeeContractHistory(employeeId);
     }
 }

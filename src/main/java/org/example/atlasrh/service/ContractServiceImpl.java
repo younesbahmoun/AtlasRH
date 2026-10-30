@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -67,5 +68,18 @@ public class ContractServiceImpl implements ContractService {
 
         Contract updatedContract = contractRepository.save(contract);
         return contractMapper.toResponse(updatedContract);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ContractResponse> getEmployeeContractHistory(Long employeeId) {
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new ResourceNotFoundException("Employee not found with id: " + employeeId);
+        }
+
+        return contractRepository.findByEmployeeIdOrderByStartDateDesc(employeeId)
+                .stream()
+                .map(contractMapper::toResponse)
+                .toList();
     }
 }

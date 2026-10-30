@@ -8,7 +8,7 @@ import org.example.atlasrh.dto.employee.EmployeeUpdateRequest;
 import java.util.List;
 
 public interface EmployeeService {
-    EmployeeResponse add(Long departmentId, EmployeeCreateRequest request);
+    EmployeeResponse add(EmployeeCreateRequest request);
     EmployeeResponse getEmployeeByDepartmentId(Long departmentId, Long employeeId);
     List<EmployeeResponse> getEmployeesByDepartment(Long departmentId);
     EmployeeResponse updateEmployee(Long employeeId, EmployeeUpdateRequest request);

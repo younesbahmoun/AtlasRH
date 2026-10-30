@@ -17,7 +17,6 @@ import org.example.atlasrh.repository.DepartmentRepository;
 import org.example.atlasrh.repository.EmployeeRepository;
 import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.openapitools.jackson.nullable.JsonNullable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeResponse add(@Param("id") Long departmentId, EmployeeCreateRequest request) {
+    public EmployeeResponse add(EmployeeCreateRequest request) {
 
         log.info("Incoming Manager ID from request: {}", request.managerId());
 
@@ -49,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new DuplicateResourceException("email: " + request.email() + " already exist");
         }
 
-        Department department = departmentRepository.findById(departmentId)
+        Department department = departmentRepository.findById(request.departmentId())
                 .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
         Employee manager = null;
         if (request.managerId() != null) {

@@ -36,5 +36,9 @@ public record EmployeeCreateRequest (
     ContractType contractType,
 
     @Positive(message = "{employee.managerId.positive}")
-    Long managerId
+    Long managerId,
+
+    @NotNull(message = "{department.departmentId.required}")
+    @Positive(message = "{employee.managerId.positive}")
+    Long departmentId
 ){}

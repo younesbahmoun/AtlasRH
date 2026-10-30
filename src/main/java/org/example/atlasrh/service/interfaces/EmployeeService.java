@@ -13,4 +13,5 @@ public interface EmployeeService {
     EmployeeResponse updateEmployee(Long employeeId, EmployeeUpdateRequest request);
     EmployeeResponse patchEmployee(Long employeeId, EmployeePatchRequest request);
     Page<EmployeeResponse> getAllEmployees(String fullName, Long departmentId, Pageable pageable);
+    Page<EmployeeResponse> findByManagerId(Long managerId, Pageable pageable);
 }

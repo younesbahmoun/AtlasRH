@@ -203,4 +203,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return employees.map(employeeMapper::toResponse);
     }
+
+    @Override
+    @Transactional
+    public Page<EmployeeResponse> findByManagerId(Long managerId, Pageable pageable) {
+
+        if (!employeeRepository.existsById(managerId)) {
+            throw new ResourceNotFoundException("Manager not found with id: " + managerId);
+        }
+
+        return employeeRepository.findByManagerId(managerId, pageable).map(employeeMapper::toResponse);
+    }
 }

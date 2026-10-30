@@ -35,4 +35,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     """)
     Page<Employee> findByFullNameContainingIgnoreCaseAndDepartmentId(@Param("fullName") String fullName, @Param("departmentId") Long departmentId, Pageable pageable);
 
+    Page<Employee> findByManagerId(Long managerId, Pageable pageable);
+
 }

@@ -13,7 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,6 +32,7 @@ public class EmployeeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmployeeResponse createEmployee(@Valid @RequestBody EmployeeCreateRequest request) {
+
         return employeeService.createEmployee(request);
     }
 
@@ -58,5 +66,11 @@ public class EmployeeController {
         return employeeService.patchEmployee(employeeId, request);
     }
 
+//    @GetMapping("/manager/{managerId}/employees")
+    @GetMapping("/{managerId}/team")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<EmployeeResponse> findByManagerId(@PathVariable Long managerId, Pageable pageable) {
+        return employeeService.findByManagerId(managerId, pageable);
+    }
 
 }

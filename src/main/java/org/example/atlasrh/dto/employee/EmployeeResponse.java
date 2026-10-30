@@ -12,8 +12,7 @@ public record EmployeeResponse (
         String lastName,
         String email,
         String jobTitle,
-        LocalDate hireDate,
-        ContractType contractType
+        LocalDate hireDate
 //        Long managerId,
 //        String managerFullName
 ) {}

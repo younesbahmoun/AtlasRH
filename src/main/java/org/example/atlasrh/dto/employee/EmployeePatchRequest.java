@@ -36,8 +36,6 @@ public class EmployeePatchRequest {
     @PastOrPresent(message = "{employee.hireDate.invalid}")
     private LocalDate hireDate;
 
-    private ContractType contractType;
-
     @Positive(message = "{department.departmentId.positive}")
     private Long departmentId;
 

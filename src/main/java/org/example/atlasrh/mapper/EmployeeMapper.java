@@ -22,7 +22,6 @@ public interface EmployeeMapper {
     @Mapping(target = "email", source = "request.email")
     @Mapping(target = "jobTitle", source = "request.jobTitle")
     @Mapping(target = "hireDate", source = "request.hireDate")
-    @Mapping(target = "contractType", source = "request.contractType")
     @Mapping(target = "department", source = "department")
     @Mapping(target = "manager", source = "manager")
     Employee toEntity(EmployeeCreateRequest request, Department department, Employee manager);

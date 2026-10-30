@@ -17,6 +17,8 @@ import org.example.atlasrh.repository.DepartmentRepository;
 import org.example.atlasrh.repository.EmployeeRepository;
 import org.example.atlasrh.service.interfaces.EmployeeService;
 import org.openapitools.jackson.nullable.JsonNullable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import org.slf4j.Logger;
@@ -36,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public EmployeeResponse add(EmployeeCreateRequest request) {
+    public EmployeeResponse createEmployee(EmployeeCreateRequest request) {
 
         log.info("Incoming Manager ID from request: {}", request.managerId());
 
@@ -63,28 +65,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.toResponse(savedEmployee);
     }
 
+
     @Override
-    public EmployeeResponse getEmployeeByDepartmentId(Long departmentId, Long employeeId) {
+    public EmployeeResponse getEmployeeById( Long employeeId) {
 
-        departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + departmentId));
-
-        Employee employee = employeeRepository.findByIdAndDepartmentId(employeeId, departmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + employeeId + " not found in department with id " + departmentId));
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee with id " + employeeId + " not found"));
 
         return employeeMapper.toResponse(employee);
-    }
-
-    @Override
-    public List<EmployeeResponse> getEmployeesByDepartment(Long departmentId) {
-
-        departmentRepository.findById(departmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + departmentId));
-
-        return employeeRepository.findByDepartmentId(departmentId)
-                .stream()
-                .map(employeeMapper::toResponse)
-                .toList();
     }
 
     @Override
@@ -125,10 +113,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return employeeMapper.toResponse(updatedEmployee);
     }
-
-
-
-
 
     @Override
     @Transactional
@@ -201,5 +185,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (request.getJobTitle() != null && request.getJobTitle().isBlank()) {
             throw new InvalidEmployeeDataException("Job title cannot be blank");
         }
+    }
+
+//    US2: 3
+    @Override
+    public Page<EmployeeResponse> getAllEmployees(String fullName, Long departmentId, Pageable pageable) {
+        boolean hasName = fullName != null && !fullName.trim().isEmpty();
+        Page<Employee> employees;
+        if (hasName && departmentId != null) {
+            employees = employeeRepository.findByFullNameContainingIgnoreCaseAndDepartmentId(fullName.trim(), departmentId, pageable);
+        } else if(hasName) {
+            employees = employeeRepository.findByFullNameContainingIgnoreCase(fullName.trim(), pageable);
+        } else if(departmentId != null) {
+            employees = employeeRepository.findByDepartmentId(departmentId, pageable);
+        } else {
+            employees = employeeRepository.findAll(pageable);
+        }
+        return employees.map(employeeMapper::toResponse);
     }
 }

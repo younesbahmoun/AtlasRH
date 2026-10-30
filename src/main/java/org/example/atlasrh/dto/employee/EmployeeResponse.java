@@ -3,6 +3,8 @@ package org.example.atlasrh.dto.employee;
 import org.example.atlasrh.entity.Employee;
 import org.example.atlasrh.enums.ContractType;
 
+import java.time.LocalDate;
+
 public record EmployeeResponse (
         Long id,
         String employeeNumber,
@@ -10,6 +12,8 @@ public record EmployeeResponse (
         String lastName,
         String email,
         String jobTitle,
-        String hireDate,
+        LocalDate hireDate,
         ContractType contractType
+//        Long managerId,
+//        String managerFullName
 ) {}

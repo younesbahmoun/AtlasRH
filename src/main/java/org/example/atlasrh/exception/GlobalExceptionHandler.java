@@ -1,5 +1,6 @@
 package org.example.atlasrh.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -85,13 +86,38 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidEmployeeDataException.class)
-    public ResponseEntity<Map<String, Object>> handleInvalidEmployeeData(
-            InvalidEmployeeDataException exception) {
+    public ResponseEntity<Map<String, Object>> handleInvalidEmployeeData(InvalidEmployeeDataException exception) {
 
         return ResponseEntity.badRequest().body(
                 Map.of(
                         "status", 400,
                         "error", "Bad Request",
+                        "message", exception.getMessage(),
+                        "timestamp", Instant.now().toString()
+                )
+        );
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolation(ConstraintViolationException exception) {
+        return ResponseEntity.badRequest().body(
+                Map.of(
+                        "status", 400,
+                        "error", "Bad Request",
+                        "message", exception.getMessage(),
+                        "timestamp", Instant.now().toString()
+                )
+        );
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessException(
+            BusinessException exception) {
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                Map.of(
+                        "status", 409,
+                        "error", "Conflict",
                         "message", exception.getMessage(),
                         "timestamp", Instant.now().toString()
                 )

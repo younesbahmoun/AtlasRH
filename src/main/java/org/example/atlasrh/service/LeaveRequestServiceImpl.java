@@ -5,6 +5,7 @@ import org.example.atlasrh.dto.LeaveRequest.LeaveDecisionRequest;
 import org.example.atlasrh.dto.LeaveRequest.LeaveRequestResponse;
 import org.example.atlasrh.entity.LeaveRequest;
 import org.example.atlasrh.enums.LeaveStatus;
+import org.example.atlasrh.exception.BusinessException;
 import org.example.atlasrh.exception.ResourceNotFoundException;
 import org.example.atlasrh.mapper.LeaveRequestMapper;
 import org.example.atlasrh.repository.EmployeeRepository;
@@ -78,7 +79,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
                 .orElseThrow(() -> new ResourceNotFoundException("Leave request not found in your team"));
 
         if (leaveRequest.getStatus() != LeaveStatus.EN_ATTENTE) {
-            throw new IllegalStateException("Only pending leave requests can be processed");
+            throw new BusinessException("This leave request has already been processed");
         }
 
         return leaveRequest;

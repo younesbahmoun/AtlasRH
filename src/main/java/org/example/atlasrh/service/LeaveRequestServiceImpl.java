@@ -53,6 +53,19 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         return leaveRequestMapper.toResponse(leaveRequestRepository.save(leaveRequest));
     }
 
+    // Reject a leave request
+    @Override
+    public LeaveRequestResponse rejectRequest(Long managerId, Long requestId, LeaveDecisionRequest request) {
+
+        LeaveRequest leaveRequest = getPendingRequest(managerId, requestId);
+
+        leaveRequest.setStatus(LeaveStatus.REFUSEE);
+        leaveRequest.setComment(request.comment());
+        leaveRequest.setDecisionDate(LocalDateTime.now());
+
+        return leaveRequestMapper.toResponse(leaveRequestRepository.save(leaveRequest));
+    }
+
     // Verify that the request belongs to the manager team
     // and is still pending
     private LeaveRequest getPendingRequest(Long managerId, Long requestId) {

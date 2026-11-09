@@ -15,5 +15,11 @@ public interface LeaveRequestService {
             Long requestId,
             LeaveDecisionRequest request
     );
+
+    LeaveRequestResponse rejectRequest(
+            Long managerId,
+            Long requestId,
+            LeaveDecisionRequest request
+    );
 }
 

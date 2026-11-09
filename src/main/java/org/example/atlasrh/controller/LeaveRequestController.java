@@ -31,4 +31,10 @@ public class LeaveRequestController {
     public LeaveRequestResponse approveRequest(@RequestParam Long managerId, @PathVariable Long requestId, @Valid @RequestBody(required = false) LeaveDecisionRequest request) {
         return leaveRequestService.approveRequest(managerId, requestId, request);
     }
+
+    // Reject a leave request
+    @PatchMapping("/{requestId}/reject")
+    public LeaveRequestResponse rejectRequest(@RequestParam Long managerId, @PathVariable Long requestId, @Valid @RequestBody LeaveDecisionRequest request) {
+        return leaveRequestService.rejectRequest(managerId, requestId, request);
+    }
 }

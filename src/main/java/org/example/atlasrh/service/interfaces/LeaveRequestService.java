@@ -9,5 +9,11 @@ import java.util.List;
 public interface LeaveRequestService {
 
     List<LeaveRequestResponse> getPendingRequests(Long managerId);
+
+    LeaveRequestResponse approveRequest(
+            Long managerId,
+            Long requestId,
+            LeaveDecisionRequest request
+    );
 }
 

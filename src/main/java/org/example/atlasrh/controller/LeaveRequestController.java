@@ -25,4 +25,10 @@ public class LeaveRequestController {
     public List<LeaveRequestResponse> getPendingRequests(@RequestParam Long managerId) {
         return leaveRequestService.getPendingRequests(managerId);
     }
+
+    // Approve a leave request
+    @PatchMapping("/{requestId}/approve")
+    public LeaveRequestResponse approveRequest(@RequestParam Long managerId, @PathVariable Long requestId, @Valid @RequestBody(required = false) LeaveDecisionRequest request) {
+        return leaveRequestService.approveRequest(managerId, requestId, request);
+    }
 }

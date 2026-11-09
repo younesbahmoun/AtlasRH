@@ -10,7 +10,7 @@ import org.example.atlasrh.exception.ResourceNotFoundException;
 import org.example.atlasrh.mapper.LeaveRequestMapper;
 import org.example.atlasrh.repository.EmployeeRepository;
 import org.example.atlasrh.repository.LeaveRequestRepository;
-import org.example.atlasrh.service.interfaces.LeaveRequestService;
+import org.example.atlasrh.service.interfaces.ManagerLeaveRequestService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class LeaveRequestServiceImpl implements LeaveRequestService {
+public class ManagerLeaveRequestServiceImpl implements ManagerLeaveRequestService {
 
     private final LeaveRequestRepository leaveRequestRepository;
     private final EmployeeRepository employeeRepository;

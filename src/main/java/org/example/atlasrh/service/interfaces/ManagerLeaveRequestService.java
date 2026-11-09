@@ -6,7 +6,7 @@ import org.example.atlasrh.dto.LeaveRequest.LeaveRequestResponse;
 
 import java.util.List;
 
-public interface LeaveRequestService {
+public interface ManagerLeaveRequestService {
 
     List<LeaveRequestResponse> getPendingRequests(Long managerId);
 

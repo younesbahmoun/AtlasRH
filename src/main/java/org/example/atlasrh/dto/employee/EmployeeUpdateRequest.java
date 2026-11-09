@@ -32,9 +32,6 @@ public record EmployeeUpdateRequest(
         @PastOrPresent(message = "{employee.hireDate.invalid}")
         LocalDate hireDate,
 
-        @NotNull(message = "{employee.contractType.required}")
-        ContractType contractType,
-
         @NotNull(message = "{department.departmentId.required}")
         @Positive(message = "{department.departmentId.positive}")
         Long departmentId,

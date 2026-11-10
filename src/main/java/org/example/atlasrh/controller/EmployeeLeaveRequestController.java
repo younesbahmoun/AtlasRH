@@ -24,4 +24,10 @@ public class EmployeeLeaveRequestController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(leaveRequestService.createRequest(employeeId, request));
     }
+
+    @GetMapping
+    public ResponseEntity<List<LeaveRequestResponse>> getMyRequests(@RequestParam Long employeeId, @RequestParam(required = false) LeaveStatus status) {
+
+        return ResponseEntity.ok(leaveRequestService.getMyRequests(employeeId, status));
+    }
 }

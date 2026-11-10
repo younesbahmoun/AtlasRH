@@ -33,4 +33,11 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long
             LocalDate endDate,
             LocalDate startDate
     );
+
+    List<LeaveRequest> findByEmployeeIdAndStatus(
+            Long employeeId,
+            LeaveStatus status
+    );
+
+    List<LeaveRequest> findByEmployeeId(Long employeeId);
 }

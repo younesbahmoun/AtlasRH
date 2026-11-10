@@ -58,4 +58,20 @@ public class EmployeeLeaveRequestServiceImpl implements EmployeeLeaveRequestServ
 
         return leaveRequestMapper.toResponse(leaveRequestRepository.save(leaveRequest));
     }
+
+    @Override
+    public List<LeaveRequestResponse> getMyRequests(Long employeeId, LeaveStatus status) {
+
+        List<LeaveRequest> requests;
+
+        if (status == null) {
+            requests = leaveRequestRepository.findByEmployeeId(employeeId);
+        } else {
+            requests = leaveRequestRepository.findByEmployeeIdAndStatus(employeeId, status);
+        }
+
+        return requests.stream()
+                .map(leaveRequestMapper::toResponse)
+                .toList();
+    }
 }

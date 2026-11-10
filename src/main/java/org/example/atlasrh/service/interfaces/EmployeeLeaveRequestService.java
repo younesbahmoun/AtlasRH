@@ -12,4 +12,9 @@ public interface EmployeeLeaveRequestService {
             Long employeeId,
             LeaveRequestCreateRequest request
     );
+
+    List<LeaveRequestResponse> getMyRequests(
+            Long employeeId,
+            LeaveStatus status
+    );
 }

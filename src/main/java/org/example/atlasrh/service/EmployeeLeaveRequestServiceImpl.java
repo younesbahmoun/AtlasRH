@@ -74,4 +74,19 @@ public class EmployeeLeaveRequestServiceImpl implements EmployeeLeaveRequestServ
                 .map(leaveRequestMapper::toResponse)
                 .toList();
     }
+
+    @Override
+    public LeaveRequestResponse cancelRequest(Long employeeId, Long requestId) {
+
+        LeaveRequest leaveRequest = leaveRequestRepository.findByIdAndEmployeeId(requestId, employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Leave request not found"));
+
+        if (leaveRequest.getStatus() != LeaveStatus.EN_ATTENTE) {
+            throw new BusinessException("Only pending leave requests can be cancelled");
+        }
+
+        leaveRequest.setStatus(LeaveStatus.ANNULEE);
+
+        return leaveRequestMapper.toResponse(leaveRequestRepository.save(leaveRequest));
+    }
 }

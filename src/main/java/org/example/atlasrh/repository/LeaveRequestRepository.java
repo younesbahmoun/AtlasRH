@@ -40,4 +40,9 @@ public interface LeaveRequestRepository extends JpaRepository<LeaveRequest, Long
     );
 
     List<LeaveRequest> findByEmployeeId(Long employeeId);
+
+    Optional<LeaveRequest> findByIdAndEmployeeId(
+            Long requestId,
+            Long employeeId
+    );
 }

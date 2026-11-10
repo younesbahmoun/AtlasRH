@@ -30,4 +30,11 @@ public class EmployeeLeaveRequestController {
 
         return ResponseEntity.ok(leaveRequestService.getMyRequests(employeeId, status));
     }
+
+    @PatchMapping("/{requestId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<LeaveRequestResponse> cancelRequest(@RequestParam Long employeeId, @PathVariable Long requestId) {
+
+        return ResponseEntity.ok(leaveRequestService.cancelRequest(employeeId, requestId));
+    }
 }

@@ -17,4 +17,9 @@ public interface EmployeeLeaveRequestService {
             Long employeeId,
             LeaveStatus status
     );
+
+    LeaveRequestResponse cancelRequest(
+            Long employeeId,
+            Long requestId
+    );
 }
